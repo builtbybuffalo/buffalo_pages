@@ -1,0 +1,20 @@
+<div class="row">
+	<div class="col-md-4">
+		<div class="form-group">
+			<%= f.label :name_cont %>
+			<%= f.text_field :name_cont, class: "form-control" %>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="form-group">
+			<%= f.label "Site" %>
+			<%= f.collection_select :site_pages_site_id_eq, Site.all.order(default: :desc), :id, :title, { include_blank: "All" }, class: "form-control" %>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="form-group">
+			<%= f.label :published %>
+			<%= f.select :published_eq, [["Published", true], ["Unpublished", false]], { include_blank: "All" }, class: "form-control" %>
+		</div>
+	</div>
+</div>

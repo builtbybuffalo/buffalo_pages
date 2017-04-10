@@ -1,0 +1,39 @@
+<% content_for :actions do %>
+	<%= render "admin/content/page_blueprints/additional_actions" %>
+<% end %>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<% [:id, :name, :template, :pages, :actions].each do |field| %>
+				<% if field.to_s == "actions" %>
+					<th class="text-right">Actions</th>
+				<% else %>
+					<th><%= field.to_s.titleize %></th>
+				<% end %>
+			<% end %>
+		</tr>
+	</thead>
+	<body>
+		<% if @collection.any? %>
+			<% @collection.order(name: :asc).each do |record| %>
+				<tr>
+					<td><%= link_to record.id, [:edit, :admin, record] %></td>
+					<td><%= record.name %></td>
+					<td><%= record.template %></td>
+					<td><%= record.pages.count %></td>
+					<td class="actions">
+						<%= link_to("Edit", [:edit, :admin, record], class: "btn btn-primary btn-xs") %>
+						<%= link_to "X", admin_content_page_blueprint_path(record), method: "delete", class: "delete btn btn-danger btn-xs", data: { confirm: "Are you sure you want to delete #{record.name}?" } %>
+					</td>
+				</tr>
+			<% end %>
+		<% else %>
+			<tr>
+				<td colspan="<%= collection_table_fields.count %>">
+					No <%= model_name.pluralize.titleize %> found.
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

@@ -1,0 +1,15 @@
+<% config = f.object.config %>
+
+<% if config[:options] %>
+	<div class="row field">
+		<div class="col-md-12">
+			<%= f.label f.object.variable_name %>
+
+			<% include_blank = config[:include_blank].present? ? { include_blank: config[:include_blank] } : {} %>
+			<%= f.select :value, config[:options].invert, include_blank, class: "form-control" %>
+
+			<%= f.errors_for :value %>
+			<%= f.help_text f.object.config[:help_text] %>
+		</div>
+	</div>
+<% end %>

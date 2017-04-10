@@ -1,0 +1,96 @@
+<% content_for :actions do %>
+	<a class="btn btn-info" href="<%= admin_content_page_blueprints_export_path(f.object) %>">Export</a>
+<% end %>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group">
+			<%= f.label :name %>
+			<%= f.text_field :name, class: "form-control" %>
+			<%= f.errors_for :name %>
+			<%= f.help_text "The blueprints name" %>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="form-group">
+			<%= f.label :template %>
+			<%= f.text_field :template, class: "form-control" %>
+			<%= f.errors_for :template %>
+			<%= f.help_text "The blueprints template. This should match a folder in the `app/views/pages/` folder, which contains a `_body.html.erb` file." %>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="form-group">
+			<%= f.label :before_action %>
+			<%= f.text_field :before_action, class: "form-control" %>
+			<%= f.errors_for :before_action %>
+			<%= f.help_text "The blueprints before_action. Run arbitrary code before the page is displayed. This should be the name of a method found on the PagesController." %>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="form-group">
+			<%= f.label :accepts_post %>
+			<%= f.check_box :accepts_post, class: "form-control" %>
+			<%= f.errors_for :accepts_post %>
+			<%= f.help_text "Do pages based on this blueprint accept POST requests? " %>
+		</div>
+	</div>
+
+	<div class="col-md-12">
+		<div class="form-group">
+			<%= f.label :post_action %>
+			<%= f.text_field :post_action, class: "form-control" %>
+			<%= f.errors_for :post_action %>
+			<%= f.help_text "The blueprints post_action. If the pages accept post requests, this action will be called." %>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="js-sortable sortable row nested_wrapper">
+				<div class="col-md-12">
+					<%= f.label :field_blueprints %>
+					<%= f.help_text "Click the button below to create new field blueprints for this template. " %>
+				</div>
+
+				<%= f.nested_fields_for :field_blueprints, wrapper_tag: :li, wrapper_options: { class: "col-sm-12" } do |i| %>
+					<%= i.hidden_field :position, class: "js-position"  %>
+					<div class="row">
+						<div class="col-md-1">
+							<span class="js-handle handle-icon icon handle glyphicon glyphicon-resize-vertical"></span>
+							<%= i.remove_nested_fields_link "X", class: "btn btn-danger btn-xs delete" %>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group <%= "has-error" if i.errors?(:variable_name) %>">
+								<%= i.text_field :variable_name, class: "form-control", placeholder: "Field name. This should be snake_cased and have no spaces or characters." %>
+								<%= i.errors_for(:variable_name) %>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group <%= "has-error" if i.errors?(:field_type) %>">
+								<%= i.select :field_type, Content::Field.available_fields.collect {|f| [f.simple_type.humanize, f.name] }, {}, { class: "form-control" } %>
+								<%= i.errors_for(:field_type) %>
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div class="form-group <%= "has-error" if i.errors?(:json_config) %>">
+								<% value = i.object.persisted? && i.object.json_config.present? ? JSON.pretty_generate(i.object.config) : "" %>
+								<%= i.text_area :json_config, value: value, class: "form-control js-check-json" %>
+								<%= i.errors_for(:json_config) %>
+							</div>
+						</div>
+					</div>
+				<% end %>
+			</ul>
+		</div>
+	</div>
+
+	<div class="col-md-12">
+		<div class="form-group ">
+			<%= f.add_nested_fields_link :field_blueprints, "Add Item", class: "btn btn-info top-buffer" %>
+		</div>
+	</div>
+</div>

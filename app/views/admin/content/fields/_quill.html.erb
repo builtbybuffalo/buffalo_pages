@@ -1,0 +1,68 @@
+<% input_id = "#{f.object.variable_name}_#{f.object.id}"  %>
+
+<% content_for :javascripts do %>
+	<script>
+		$(document).ready(function(){
+			var quill = new Quill('#editor_<%= input_id %>', {
+				modules: {
+					'toolbar': [
+						['bold', 'italic', 'underline', 'strike', 'blockquote'],
+						[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+						[{ 'indent': '-1'}, { 'indent': '+1' }],
+						[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+						[{ 'align': [] }],
+						['link', 'image', 'video'],
+						['clean']
+					]
+				},
+				syntax: true,
+				theme: 'snow',
+				// For the image uploads to work, I added a patch from this MR:
+				// https://github.com/quilljs/quill/pull/995/files#diff-6dafc0fe6b5e9aed0859eef541e68372R132
+				imageHandler: function (file, callback) {
+					var data = new FormData();
+					data.append("attachment[asset]", file);
+					data.append("attachment[attachable_type]", $("#field-type-<%= input_id %>").val());
+					data.append("attachment[attachable_id]", $("#field-id-<%= input_id %>").val());
+
+					$.ajax({
+						method: "POST",
+						data: data,
+						url: "<%= admin_content_image_uploads_path %>",
+						contentType: false,
+						cache: false,
+						processData: false,
+						success: function(data){
+							quill.insertEmbed(10, 'image', data.file.url);
+						},
+						error: function(data){
+							console.log("error", data);
+						}
+					})
+				}
+			});
+
+			quill.on('text-change', function(delta, source) {
+				html = $(quill.container).find(".ql-editor").html().replace(/'/g, "\\'").replace(/"/g, '&quot;')
+
+				$("#<%= input_id %>").val(html);
+			});
+		});
+	</script>
+<% end %>
+
+<div class="row field">
+	<div class="col-md-12">
+		<%= f.label f.object.variable_name %>
+		<div class="quill-wrapper">
+			<div id="editor_<%= input_id %>" class="editor ql-container"><%== f.object.value.gsub("&amp;", "&").gsub("&quot;", '"') if f.object.value.present? %></div>
+		</div>
+
+		<%= f.hidden_field :value, id: input_id %>
+		<%= f.errors_for :value %>
+		<%= f.help_text f.object.config[:help_text] %>
+
+		<%= f.hidden_field :type, id: "field-type-#{input_id}" unless defined?(exclude_type) && exclude_type %>
+		<%= f.hidden_field :id, id: "field-id-#{input_id}" %>
+	</div>
+</div>

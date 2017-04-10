@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="col-md-12">
+		<%= f.label f.object.variable_name %>
+	</div>
+</div>
+
+<ul class="js-sortable field nested_wrapper js-repeater" data-limit="<%= f.object.config[:limit] %>">
+	<%= f.nested_fields_for :repeater_groups, wrapper_tag: :li, wrapper_options: { class: "js-repeater-item row field" } do |rg| %>
+		<%= rg.hidden_field :position, class: "js-position" %>
+			<div class="col-md-1">
+				<span class="js-handle handle-icon icon handle glyphicon glyphicon-resize-vertical"></span>
+				<%= rg.remove_nested_fields_link "X", class: "btn btn-danger btn-xs delete" %>
+			</div>
+
+			<% rg.object.repeater = f.object %>
+
+			<div class="col-xs-11">
+				<% config = (rg.object.repeater.field_blueprint&.config || f.object.config) %>
+				<% config[:repeaters].each do |field_config| %>
+					<% field = rg.object.fields.detect { |field| field.variable_name == field_config[:variable_name] } %>
+					<% field ||= field_config[:type].constantize.new(field_config) %>
+
+					<%= rg.fields_for :fields, field do |ff| %>
+						<%= ff.hidden_field :type, value: field.type %>
+						<%= ff.hidden_field :variable_name, value: field.variable_name %>
+						<%# We need to copy over the json_config so we know how we fields need to be displayed %>
+						<%= ff.hidden_field(:json_config, value: field_config[:json_config].to_json) unless field_config[:json_config].blank? %>
+
+						<%= render "admin/content/fields/#{field.class.simple_type}", f: ff %>
+					<% end %>
+				<% end %>
+			</div>
+	<% end %>
+
+	<div class="form-group ">
+		<%= f.add_nested_fields_link :repeater_groups, "Add #{f.object.variable_name.humanize} repeater", class: "btn btn-info top-buffer" %>
+	</div>
+</ul>

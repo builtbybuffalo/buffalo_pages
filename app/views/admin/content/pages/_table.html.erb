@@ -1,0 +1,38 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>URL</th>
+			<th>Blueprint</th>
+			<th>Status</th>
+			<th>Post Requests?</th>
+			<th>Available on site(s)</th>
+			<th class="text-right">Actions</th>
+		</tr>
+	</thead>
+	<body>
+		<% if @collection.any? %>
+			<% @collection.order(slug: :asc).each do |record| %>
+				<tr>
+					<td><%= record.name %></td>
+					<td><%= if record.published? then link_to record.url, record.url, target: "_blank" else record.slug end %></td>
+					<td><%= record.page_blueprint.name %></td>
+					<td><%= record.published? ? "Published" : "Not published" %></td>
+					<td><%= record.accepts_post ? "Yes" : "No" if record.published? %></td>
+					<td><%= record.site_pages.map(&:site).map(&:name).join(", ") %></td>
+					<td class="actions">
+						<%= link_to "View", record.url, target: "_blank", class: "btn btn-warning btn-xs" if record.published? %>
+						<%= link_to "Edit", [:edit, :admin, record], class: "btn btn-primary btn-xs" %>
+						<%= link_to "X", admin_content_page_path(record), method: "delete", class: "delete btn btn-danger btn-xs", data: { confirm: "Are you sure you want to delete #{record.name}?" } %>
+					</td>
+				</tr>
+			<% end %>
+		<% else %>
+			<tr>
+				<td colspan="<%= collection_table_fields.count %>">
+					No <%= model_name.pluralize %> found.
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

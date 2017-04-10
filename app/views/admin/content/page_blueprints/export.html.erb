@@ -1,0 +1,17 @@
+<% content_for :heading, "Export Page Blueprints" %>
+
+<% content_for :actions do %>
+	<%= render "admin/content/page_blueprints/additional_actions" %>
+<% end %>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-group">
+			<label>Page Blueprint JSON</label>
+			<%= text_area_tag :export, JSON.pretty_generate(@page_blueprints), class: "form-control input-large", style: "width: 100%; height: 500px" %>
+			<p class="help-block">
+				<small>Above is an export of your content configuration. Copy this text and paste it in to the <%= link_to "import text area", admin_content_page_blueprints_import_path %>.</small>
+			</p>
+		</div>
+	</div>
+</div>

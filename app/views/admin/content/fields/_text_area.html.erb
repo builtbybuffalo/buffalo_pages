@@ -1,0 +1,10 @@
+<div class="row field">
+	<div class="col-md-12">
+		<%= f.label f.object.variable_name %>
+		<%= f.text_area :value, class: "form-control" %>
+		<%= f.errors_for :value %>
+		<%= f.help_text f.object.config[:help_text] %>
+
+		<%= f.hidden_field :type %>
+	</div>
+</div>

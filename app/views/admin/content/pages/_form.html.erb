@@ -1,0 +1,108 @@
+<% content_for :actions do %>
+	<%= link_to "View", f.object.url, target: "_blank", class: "btn btn-warning" if f.object.persisted? && f.object.published? %>
+	<%= link_to "Blueprint", edit_admin_content_page_blueprint_path(f.object.page_blueprint), target: "_blank", class: "btn btn-primary" if f.object.persisted? %>
+<% end %>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group">
+			<%= f.label :name %>
+			<%= f.text_field :name, class: "form-control" %>
+			<%= f.errors_for :name %>
+			<%= f.help_text "The page name" %>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="form-group">
+			<%= f.label :slug %>
+			<%= f.text_field :slug, class: "form-control" %>
+			<%= f.errors_for :slug %>
+			<%= f.help_text "The pages URL friendly title - leave this blank for it to be automatically created. Do not add a forward slash. " %>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group">
+			<%= f.label :page_blueprint_id %>
+			<%= f.collection_select :page_blueprint_id, Content::PageBlueprint.all.order(:name), :id, :name, {}, class: "form-control", disabled: @object.persisted? %>
+			<%= f.errors_for :page_blueprint_id %>
+			<%= f.help_text "The blueprints that this page is based on" %>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-md-12">
+					<%= f.label :sites %>
+				</div>
+				<%= f.nested_fields_for :site_pages, wrapper_tag: :div, wrapper_options: { class: "col-sm-12" } do |ff| %>
+					<div class="row">
+						<div class="col-md-1">
+							<%= ff.remove_nested_fields_link "X", class: "btn btn-danger btn-xs delete" %>
+						</div>
+						<div class="col-md-11">
+							<%= ff.collection_select :site_id, Site.all.order(:default), :id, :title, { include_blank: "Select Site..."}, class: "form-control"%>
+							<%= ff.hidden_field :page_id, value: f.object.id %>
+						</div>
+					</div>
+				<% end %>
+				<div class="col-md-12">
+					<%= f.errors_for :site_ids %>
+					<%= f.help_text "The sites that this page should be available on" %>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group ">
+						<%= f.add_nested_fields_link :site_pages, "Add Site", class: "btn btn-info top-buffer" %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row js-meta-fields">
+	<div class="col-xs-4">
+		<div class="form-group">
+			<%= f.label :published %>
+			<%= f.check_box :published, class: "form-control" %>
+			<%= f.errors_for :published %>
+			<div class="help-inline">
+				<%= f.help_text "Is this page published? Unpublished pages are not available to access via their URL, however could be used to store information for other parts of the site. " %>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xs-4">
+		<div class="form-group">
+			<%= f.label :meta_title %>
+			<%= f.text_field :meta_title, class: "form-control" %>
+			<%= f.errors_for :meta_title %>
+			<%= f.help_text "The page meta title. This can be different from the main page title - more focused on SEO relevance." %>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="form-group">
+			<%= f.label :meta_keywords %>
+			<%= f.text_field :meta_keywords, class: "form-control" %>
+			<%= f.errors_for :meta_keywords %>
+			<%= f.help_text "Comma separated keywords" %>
+		</div>
+	</div>
+	<div class="col-xs-12">
+		<div class="form-group">
+			<%= f.label :meta_description %>
+			<%= f.text_area :meta_description, class: "form-control" %>
+			<%= f.errors_for :meta_description %>
+			<%= f.help_text "The page content description" %>
+		</div>
+	</div>
+</div>
+
+<% if @object.persisted? && @object.fields.any? %>
+	<%= f.fields_for :fields, wrapper_options: { class: "col-sm-12" } do |ff| %>
+    <%= render "admin/content/fields/#{ff.object.class.simple_type}", f: ff %>
+	<% end %>
+<% end %>

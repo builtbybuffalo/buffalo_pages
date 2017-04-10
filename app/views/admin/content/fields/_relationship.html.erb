@@ -1,0 +1,31 @@
+<% config = f.object.config %>
+
+<%= f.hidden_field :thingable_type, value: config[:model] %>
+
+<% if config[:selectable] %>
+	<div class="row field">
+		<div class="col-md-12">
+			<%= f.label f.object.variable_name %>
+			<%= f.collection_select :thingable_id,
+				Content::Fields::Relationship.selectable_collection_from_config(config),
+				:id, (config[:name_attribute] || :title),
+				{ include_blank: (config[:include_blank] || "Please select...") },
+				class: "form-control"
+			%>
+
+			<%= f.errors_for :value %>
+			<%= f.help_text f.object.config[:help_text] %>
+			<%= f.hidden_field :type %>
+		</div>
+	</div>
+<% else %>
+	<div class="row field">
+		<div class="col-md-12">
+			<%= f.label f.object.variable_name %>
+			<div class="well">
+				<p>Relationship: <%= config[:model] %></p>
+				<%== "<p>Requirements: #{config[:scopes].map(&:humanize).join(", ")}</p>" if config[:scopes].present? %>
+			</div>
+		</div>
+	</div>
+<% end %>

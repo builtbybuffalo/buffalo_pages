@@ -1,0 +1,13 @@
+<div class="row field">
+	<div class="col-xs-12">
+		<div class="form-group">
+			<%= f.label f.object.variable_name %>
+			<%= f.collection_select :value, Gallery.all.order(:title), :id, :title, { include_blank: "Please select..." }, class: "form-control" %>
+			<%= f.errors_for :value %>
+			<%= f.help_text "The gallery that should be added to the page" %>
+
+			<%= f.hidden_field :type %>
+		</div>
+	</div>
+
+</div>
