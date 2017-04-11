@@ -1,41 +1,38 @@
-# BuffaloPages
+# Install
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/buffalo_pages`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'buffalo_pages'
+```
+gem 'buffalo_pages', github: 'builtbybuffalo/buffalo_pages'
 ```
 
-And then execute:
+Once installed, you'll need to grab migrations with:
 
-    $ bundle
+```
+rake buffalo_pages:install
+rake db:migrate
+```
 
-Or install it yourself as:
+## Routes
 
-    $ gem install buffalo_pages
+```
+    namespace :content do
+      get "page_blueprints/export(/:page_blueprint_id)", to: "page_blueprints#export", as: :page_blueprints_export
+      get "page_blueprints/import", to: "page_blueprints#import", as: :page_blueprints_import
+      post "page_blueprints/process", to: "page_blueprints#process_import"
 
-## Usage
+      resources :page_blueprints, except: [:show] do
+        resources :field_blueprints
+      end
 
-TODO: Write usage instructions here
+      resources :pages do
+        resources :fields
+      end
 
-## Development
+      resources :image_uploads, only: [:create]
+    end
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+This is only tested in the `admin` namespace, so you may experience errors using this anywhere else.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## Access Control
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/jaspertandy/buffalo_pages.
-
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+There is no access control provided here. You'll need to do that yourself. Don't forget!
