@@ -7,7 +7,7 @@
 =end
 module Content
   module Fields
-    class Seperator < Field
+    class Separator < Field
     end
   end
 end

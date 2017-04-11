@@ -19,15 +19,18 @@ module Content
 
     after_create :import_fields_from_blueprint
 
-    # To avoid code duplication and allow rake tasks to call the redraw_routes` method we need it to be a class method
-    after_save "self.class.redraw_routes"
-    after_destroy "self.class.redraw_routes"
+    after_save :redraw_routes
+    after_destroy :redraw_routes
 
     delegate :template, :before_action, :accepts_post, :post_action, to: :page_blueprint
 
     def self.redraw_routes
       ContentPageRouter.redraw
       Rails.application.reload_routes!
+    end
+
+    def redraw_routes
+      self.class.redraw_routes
     end
 
     def title

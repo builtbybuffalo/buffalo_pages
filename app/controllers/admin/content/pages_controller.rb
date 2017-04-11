@@ -1,6 +1,6 @@
 module Admin
   module Content
-    class PagesController < ResourceController
+    class PagesController < ::Admin::ResourceController
       before_action :build_field_associations, only: [:create, :update]
 
       def create

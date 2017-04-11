@@ -1,5 +1,6 @@
 require "buffalo_pages/version"
 require "date_time"
+require "friendly_id"
 
 module BuffaloPages
   if defined?(Rails)
