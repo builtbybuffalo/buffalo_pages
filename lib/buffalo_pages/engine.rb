@@ -29,5 +29,19 @@ module BuffaloPages
     config.content_field_types << Content::Fields::Relationship
     config.content_field_types << Content::Fields::Select
     config.content_field_types << Content::Fields::Separator
+
+    config.paperclip_defaults = {
+      styles: {
+        thumb: "100x100>", # Used for all admin images
+        small: "500x350>",
+        medium: "1000x750>",
+        large: "1500x850>",
+        banner: "1800x700#" # Used for all header banner images
+      },
+      default_style: :original,
+      default_url: "/media/images/missing.jpg",
+      url: "/uploads/:class/:id/:style/:filename",
+      path: ":rails_root/public/uploads/:class/:id/:style/:filename"
+    }
   end
 end

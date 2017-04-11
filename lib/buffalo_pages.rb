@@ -3,6 +3,8 @@ require "date_time"
 require "friendly_id"
 require "acts_as_list"
 require "city-state"
+require "paperclip"
+require "delayed_paperclip"
 
 module BuffaloPages
   if defined?(Rails)

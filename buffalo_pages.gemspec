@@ -36,4 +36,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "paperclip", "~> 5.0.0"
   spec.add_runtime_dependency "acts_as_list"
   spec.add_runtime_dependency "city-state"
+  spec.add_runtime_dependency "delayed_paperclip"
 end

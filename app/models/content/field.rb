@@ -18,7 +18,7 @@ module Content
     # when the field is updated FROM its field blueprint and has the new data
     after_update :reconfigure, if: :json_config_changed?
 
-    delegate :==, :to_s, to: :value
+    delegate :==, :to_s, :html_safe, to: :value
 
     def self.available_fields
       Rails.application.config.content_field_types
