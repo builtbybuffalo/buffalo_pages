@@ -29,6 +29,20 @@ rake db:migrate
 
       resources :image_uploads, only: [:create]
     end
+
+    resources :menus do
+      resources :menu_items
+    end
+
+    resources :sites do
+      collection do
+        post :reset
+      end
+
+      member do
+        post :set
+      end
+    end
 ```
 
 This is only tested in the `admin` namespace, so you may experience errors using this anywhere else.
