@@ -1,0 +1,115 @@
+<div class="row">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<%= f.label :name %>
+					<%= f.text_field :name, class: "form-control" %>
+					<%= f.errors_for :name %>
+					<%= f.help_text "The site name" %>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<%= f.label :default_currency %>
+					<%= f.select :default_currency, %w(GBP USD EUR), {}, class: "form-control" %>
+					<%= f.errors_for :default_currency %>
+					<%= f.help_text "Is this is the default currency for this site" %>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<%= f.label :default %>
+					<% if (default = Site.find_by(default: true)).present? %>
+						<br><p><%== "<strong>#{default.name}</strong> is set as the default site" %></p>
+					<% else %>
+						<%= f.check_box :default, class: "form-control" %>
+						<%= f.errors_for :default %>
+					<% end %>
+					<%= f.help_text "Is this is the default site?" %>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-12">
+				<hr>
+				<h2>Site Menus</h2>
+				<hr>
+			</div>
+			<% %i(main_menu_id footer_menu_id legal_menu_id).each do |menu| %>
+				<div class="col-md-4">
+					<div class="form-group">
+						<%= f.label menu %>
+						<%= f.collection_select menu, Menu.all, :id, :title, {}, class: "form-control" %>
+						<%= f.errors_for menu %>
+						<%= f.help_text "Select the menu for this position" %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-md-12">
+				<hr>
+				<h2>Meta data</h2>
+				<hr>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<%= f.label :meta_title %>
+					<%= f.text_field :meta_title, class: "form-control" %>
+					<%= f.errors_for :meta_title %>
+					<%= f.help_text "The sites SEO title" %>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<%= f.label :meta_keywords %>
+					<%= f.text_field :meta_keywords, class: "form-control" %>
+					<%= f.errors_for :meta_keywords %>
+					<%= f.help_text "Keywords used for SEO" %>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+					<%= f.label :meta_description %>
+					<%= f.text_area :meta_description, class: "form-control" %>
+					<%= f.errors_for :meta_description %>
+					<%= f.help_text "The sites SEO description" %>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-md-12"><%= f.label :site_countries %></div>
+			<div class="col-md-12"><%= f.errors_for :site_countries %></div>
+			<div class="col-md-12">
+				<%= f.help_text "Countries this site is available to. Leave blank for the default site. " %>
+			</div>
+			<%= f.nested_fields_for :site_countries, wrapper_tag: "div" do |ff| %>
+				<div class="col-md-12">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-1">
+								<%= ff.remove_nested_fields_link "X", class: "btn btn-danger btn-xs delete" %>
+							</div>
+							<div class="col-md-11">
+								<%= ff.select :code, CS.countries.map { |k, v| [v, k] }, { include_blank: "Select Country..." }, class: "form-control" %>
+							</div>
+						</div>
+					</div>
+				</div>
+			<% end %>
+			<div class="col-md-12">
+				<%= f.add_nested_fields_link :site_countries, "Add Country", class: "btn btn-info top-buffer" %>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,6 +1,8 @@
 require "buffalo_pages/version"
 require "date_time"
 require "friendly_id"
+require "acts_as_list"
+require "city-state"
 
 module BuffaloPages
   if defined?(Rails)

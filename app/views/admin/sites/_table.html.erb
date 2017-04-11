@@ -1,0 +1,25 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th width="30%">Name</th>
+			<th>Countries</th>
+			<th>Currency</th>
+			<th>Default?</th>
+			<th class="text-right">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @collection.each do |site| %>
+			<tr>
+				<td><%= site.title %></td>
+				<td><%= site.site_countries.present? ? site.site_countries.map(&:code).join(", ") : "None set" %></td>
+				<td><%= site.default_currency %></td>
+				<td><%= site.default ? "Yes" : "No" %></td>
+				<td class="actions">
+					<%= link_to "View", set_admin_site_path(site), method: :post, class: "btn btn-warning btn-xs", target: "_blank" %>
+					<%= link_to "Edit", edit_admin_site_path(site), class: "btn btn-primary btn-xs" %>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
