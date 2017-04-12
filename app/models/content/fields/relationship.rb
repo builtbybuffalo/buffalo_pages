@@ -78,12 +78,13 @@ module Content
       SELECTABLE_OPTIONS = {
         order: :id,
         sort: :asc,
-        scopes: []
+        scopes: [],
+        where: "",
       }.with_indifferent_access.freeze
 
       has_one :field, as: :thingable
 
-      delegate :each, :each_with_index, :to_s, to: :relation
+      delegate :each, :each_with_index, :any?, :to_s, to: :relation
 
       def self.selectable_collection_from_config(config)
         raise "A model is required within the config" unless config[:model].present?
@@ -98,7 +99,10 @@ module Content
           relationship = relationship.send(scope)
         end
 
-        relationship.order("#{options[:order]}": options[:sort])
+        relationship = relationship.order("#{options[:order]}": options[:sort])
+        relationship = relationship.where(options[:where]) if options[:where].present?
+
+        relationship
       end
 
       def method_missing(method_name, *args)
