@@ -61,7 +61,7 @@ module Content
       has_many :repeater_groups, -> { order(position: :asc) }, dependent: :destroy
       accepts_nested_attributes_for :repeater_groups, allow_destroy: true
 
-      delegate :each, :each_with_index, :count, :size, :length, to: :repeater_groups
+      delegate :each, :each_with_index, :any?, :count, :size, :length, to: :repeater_groups
 
       # This method is run when a new repeater group is added to a page as the json_config
       # is updated for the new elements
