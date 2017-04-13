@@ -11,7 +11,7 @@ class ContentPageRouter
       Content::Page.published.find_each do |page|
         if page.sites.any?
           page.sites.each do |site|
-            defaults = { slug: page.slug, site: site.id }
+            defaults = { slug: page.slug, site: site.id, locale: site.locale }
             site_slugs = [site.name.parameterize]
             site_slugs.push nil if site.default?
 

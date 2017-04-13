@@ -12,6 +12,10 @@ class Site < ActiveRecord::Base
   belongs_to :footer_menu, class_name: "Menu", foreign_key: :footer_menu_id
   belongs_to :legal_menu, class_name: "Menu", foreign_key: :legal_menu_id
 
+  def locale
+    self[:locale].presence || self.name.downcase
+  end
+
   class << self
     def from_location(location)
       SiteCountry.find_by(code: location.country_code)&.site || default
