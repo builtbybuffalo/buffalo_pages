@@ -1,0 +1,11 @@
+<% vars.each do |var, value| %>
+	<br><%= ("&nbsp;" * (depth * 3)).html_safe %><%= f.label var %>
+
+	<% if value.is_a?(Hash) %>
+		<%= render partial: "locale_vars", locals: { f: f, vars: value, depth: depth + 1, stack: stack + [var], file: file } %>
+	<% else %>
+		<div class="form-group">
+			<%= text_area_tag "site[locale_vars][#{file}][#{stack.join("][")}][#{var}]", value, class: "form-control", prefix: "" %>
+		</div>
+	<% end %>
+<% end %>
