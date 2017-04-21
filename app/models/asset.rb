@@ -51,4 +51,12 @@ class Asset < ActiveRecord::Base
     }
 
   delegate :url, to: :asset
+
+  def image?
+    asset.content_type.match(/^image\//).present?
+  end
+
+  def document?
+    !image?
+  end
 end

@@ -3,24 +3,24 @@
 
 <div class="row field">
 	<%= f.hidden_field :type %>
-	<%= f.fields_for :image do |i| %>
+	<%= f.fields_for :image do |im| %>
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
-					<p><%= i.label :image %></p>
-					<%= i.file_field :asset, class: "form-control" %>
-					<%= i.help_text f.object.config[:help_text] %>
+					<p><%= im.label (f.object.variable_name || "image").humanize %></p>
+					<%= im.file_field :asset, class: "form-control" %>
+					<%= im.help_text f.object.config[:help_text] %>
 				</div>
 				<% if config[:show_name] %>
 					<div class="col-md-12">
-						<p><%= i.label :name %></p>
-						<%= i.text_field :name, class: "form-control" %>
+						<p><%= im.label :name %></p>
+						<%= im.text_field :name, class: "form-control" %>
 					</div>
 				<% end %>
 				<% if config[:show_caption] %>
 					<div class="col-md-12">
-						<p><%= i.label :caption %></p>
-						<%= i.text_field :caption, class: "form-control" %>
+						<p><%= im.label :caption %></p>
+						<%= im.text_field :caption, class: "form-control" %>
 					</div>
 				<% end %>
 			</div>
@@ -28,7 +28,11 @@
 	<% end %>
 	<div class="col-md-6">
 		<% if f.object.image&.asset.present? %>
-			<%= image_tag f.object.image.asset.url(:thumb) %>
+			<% if f.object.image.image? %>
+				<%= image_tag f.object.image.asset.url(:thumb) %>
+			<% else %>
+				<%= link_to f.object.image.asset_file_name, f.object.image.asset.url(:original) %>
+			<% end %>
 		<% end %>
 	</div>
 </div>
