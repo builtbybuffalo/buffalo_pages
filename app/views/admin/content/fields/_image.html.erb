@@ -26,13 +26,15 @@
 			</div>
 		</div>
 	<% end %>
-	<div class="col-md-6">
-		<% if f.object.image&.asset.present? %>
-			<% if f.object.image.image? %>
+	<% if f.object.image&.asset.present? %>
+		<% if f.object.image.image? %>
+			<div class="col-md-6">
 				<%= image_tag f.object.image.asset.url(:thumb) %>
-			<% else %>
+			</div>
+		<% else %>
+			<div class="col-md-7">
 				<%= link_to f.object.image.asset_file_name, f.object.image.asset.url(:original) %>
-			<% end %>
+			</div>
 		<% end %>
-	</div>
+	<% end %>
 </div>
