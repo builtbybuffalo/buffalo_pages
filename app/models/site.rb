@@ -22,9 +22,13 @@ class Site < ActiveRecord::Base
     "#{Rails.root}/config/locales/"
   end
 
+  def self.default_site
+    Site.find_by(default: true)
+  end
+
   def copy_default_locales
-    default = Site.where.not(id: id).find_by(default: true)
-    if default.present?
+    default = self.class.default_site
+    if default.present? && default.id != id
       default.locale_paths.each do |path|
         target_path = path.sub(/#{default.locale}.yml$/, "#{locale}.yml")
         default_contents = YAML.load_file(path)
@@ -65,10 +69,32 @@ class Site < ActiveRecord::Base
   end
 
   def locale_vars
-    locale_paths.map do |path|
+    @core_locale_vars = locale_paths.map do |path|
       vars = YAML.load_file(path)
 
       [path.split("/").last.split(".")[0..-2].join("."), vars]
+    end.to_h
+
+    unless default?
+      default = self.class.default_site
+      default_vars = default.locale_vars
+
+      @core_locale_vars = default_vars.map do |path, vars|
+        lookup_path = path.sub(/#{default.locale}$/, locale)
+        [lookup_path, {"#{locale}"=> recurse_locale_vars(vars[default.locale], lookup_path, [])}]
+      end.to_h
+    end
+
+    @core_locale_vars
+  end
+
+  def recurse_locale_vars(vars, path, stack)
+    vars.map do |key, values|
+      if values.is_a?(Hash)
+        [key, recurse_locale_vars(values, path, stack + [key])]
+      else
+        [key, @core_locale_vars.dig(*[path, locale] + stack + [key]) || values]
+      end
     end.to_h
   end
 
