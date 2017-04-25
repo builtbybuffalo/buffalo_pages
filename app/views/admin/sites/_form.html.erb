@@ -113,18 +113,20 @@
 		</div>
 	</div>
 
-	<div class="col-lg-12">
-		<div class="row">
-			<div class="col-md-12">
-				<h2>Localisation</h2>
-			</div>
+	<% unless f.object.new_record? %>
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="col-md-12">
+					<h2>Localisation</h2>
+				</div>
 
-			<div class="col-md-12">
-				<% f.object.locale_vars.each do |file, vars| %>
-					<h3><%= file %></h3>
-					<%= render partial: "locale_vars", locals: { f: f, vars: vars, depth: 0, stack: [], file: file } %>
-				<% end %>
+				<div class="col-md-12">
+					<% f.object.locale_vars.each do |file, vars| %>
+						<h3><%= file %></h3>
+						<%= render partial: "locale_vars", locals: { f: f, vars: vars, depth: 0, stack: [], file: file } %>
+					<% end %>
+				</div>
 			</div>
 		</div>
-	</div>
+	<% end %>
 </div>
