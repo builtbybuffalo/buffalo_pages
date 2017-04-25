@@ -64,13 +64,24 @@
 </div>
 
 <div class="row js-meta-fields">
-	<div class="col-xs-4">
+	<div class="col-xs-2">
 		<div class="form-group">
 			<%= f.label :published %>
 			<%= f.check_box :published, class: "form-control" %>
 			<%= f.errors_for :published %>
 			<div class="help-inline">
-				<%= f.help_text "Is this page published? Unpublished pages are not available to access via their URL, however could be used to store information for other parts of the site. " %>
+				<%= f.help_text "Unpublished pages are not available to access via their URL" %>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xs-2">
+		<div class="form-group">
+			<%= f.label :homepage %>
+			<%= f.check_box :homepage, class: "form-control" %>
+			<%= f.errors_for :homepage %>
+			<div class="help-inline">
+				<%= f.help_text "Acts as the homepage for the site" %>
 			</div>
 		</div>
 	</div>
