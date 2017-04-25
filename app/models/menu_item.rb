@@ -8,7 +8,25 @@ class MenuItem < ActiveRecord::Base
 
   default_scope { order(position: :asc, title: :asc) }
 
+  serialize :meta
+
   def subnav?
     menu_items.any?
+  end
+
+  def meta=(m)
+    self[:meta] = if m.is_a?(String)
+                    YAML.load(m) rescue {}
+                  else
+                    m
+                  end
+  end
+
+  def readable_meta
+    string = YAML.dump(meta)
+    string = string.sub(/^---[^\n]*\n/, "")
+    string = string.sub(/^\.\.\.\n/, "")
+
+    string
   end
 end
