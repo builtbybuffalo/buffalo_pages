@@ -1,5 +1,3 @@
-require_dependency "app/controllers/pages_controller_decorator"
-
 class PagesController < ApplicationController
   include PageBeforeActions
   include PagePostActions
