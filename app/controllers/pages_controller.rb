@@ -24,7 +24,7 @@ class PagesController < ApplicationController
   protected
 
   def set_page
-    @page = Content::Page.includes(:fields, :page_blueprint).find_by(slug: params[:slug])
+    @page = Content::Page.includes(:fields, :page_blueprint).find_by(id: params[:page_id])
   end
 
   def set_site
