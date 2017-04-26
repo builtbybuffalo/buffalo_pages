@@ -12,15 +12,10 @@ class ContentPageRouter
         if page.sites.any?
           page.sites.each do |site|
             defaults = { page_id: page.id, slug: page.slug, site: site.id, locale: site.locale }
-            site_slugs = [site.name.parameterize]
 
-            site_slugs.each do |slug|
-              slug = "/#{slug}"
-              slug += "/#{page.slug}" unless page.homepage?
-
-              get slug, to: "pages#show", defaults: defaults, as: "page_#{slug.parameterize.underscore}"
-              post slug, to: "pages#post", defaults: defaults, as: "post_#{slug.parameterize.underscore}" if page.accepts_post
-            end
+            slug = page.url_for(site)
+            get slug, to: "pages#show", defaults: defaults, as: "page_#{slug.parameterize.underscore}"
+            post slug, to: "pages#post", defaults: defaults, as: "post_#{slug.parameterize.underscore}" if page.accepts_post
           end
         else
           defaults = { slug: page.slug }

@@ -12,10 +12,18 @@
 	</thead>
 	<body>
 		<% if @collection.any? %>
-			<% @collection.order(slug: :asc).each do |record| %>
+			<% @collection.includes(:sites).order(slug: :asc).each do |record| %>
 				<tr>
 					<td><%= record.name %></td>
-					<td><%= if record.published? then link_to record.url, record.url, target: "_blank" else record.slug end %></td>
+					<td>
+						<% if record.sites.any? %>
+							<% record.sites.each do |site| %>
+								<%= if record.published? then link_to record.url_for(site), record.url_for(site), target: "_blank" else record.url_for(site) end %>
+							<% end %>
+						<% else %>
+							<%= if record.published? then link_to record.url, record.url, target: "_blank" else record.slug end %>
+						<% end %>
+					</td>
 					<td><%= record.page_blueprint.name %></td>
 					<td><%= record.published? ? "Published" : "Not published" %></td>
 					<td><%= record.accepts_post ? "Yes" : "No" if record.published? %></td>

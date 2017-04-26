@@ -41,6 +41,10 @@ module Content
       "/#{slug}"
     end
 
+    def url_for(site)
+      "/#{site.locale}/#{slug.gsub(/^\//, "")}"
+    end
+
     def available_for_site?(site)
       return true if sites.empty?
 
