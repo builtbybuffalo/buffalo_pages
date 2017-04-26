@@ -42,6 +42,7 @@ module Content
     end
 
     def url_for(site)
+      return "/#{site.locale}" if homepage?
       "/#{site.locale}/#{slug.gsub(/^\//, "")}"
     end
 
