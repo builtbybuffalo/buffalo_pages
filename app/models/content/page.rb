@@ -34,6 +34,10 @@ module Content
     end
 
     def title
+      field = field_from_method_name(:title)
+
+      return field if field.present?
+
       meta_title.present? ? meta_title : name
     end
 
