@@ -9,7 +9,7 @@
 			<%= f.select :value, config[:options].invert, include_blank, class: "form-control" %>
 
 			<%= f.errors_for :value %>
-			<%= f.help_text f.object.config[:help_text] %>
+			<%= f.help_text f.object.config[:help_text].to_s.html_safe %>
 		</div>
 	</div>
 <% end %>

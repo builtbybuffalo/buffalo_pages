@@ -9,7 +9,7 @@
 				<div class="col-md-12">
 					<p><%= im.label (f.object.variable_name || "image").humanize %></p>
 					<%= im.file_field :asset, class: "form-control" %>
-					<%= im.help_text f.object.config[:help_text] %>
+					<%= im.help_text f.object.config[:help_text].to_s.html_safe %>
 				</div>
 				<% if config[:show_name] %>
 					<div class="col-md-12">

@@ -60,7 +60,7 @@
 
 		<%= f.hidden_field :value, id: input_id %>
 		<%= f.errors_for :value %>
-		<%= f.help_text f.object.config[:help_text] %>
+		<%= f.help_text f.object.config[:help_text].to_s.html_safe %>
 
 		<%= f.hidden_field :type, id: "field-type-#{input_id}" unless defined?(exclude_type) && exclude_type %>
 		<%= f.hidden_field :id, id: "field-id-#{input_id}" %>
