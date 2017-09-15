@@ -1,39 +1,39 @@
 ## Example config_json for creating repeaters:
 =begin
   {
-     "repeaters": [
-         {
-             "variable_name": "img",
-             "type": "Content::Fields::Image",
-             "json_config": {
-                 "help_text": "An image to enhance the FAQ",
-                 "styles": {
-                     "large": "1000x700>",
-                     "medium": "500x350>",
-                     "thumb": "200x200!"
-                 }
-             }
-         },
-         {
-             "variable_name": "title",
-             "type": "Content::Fields::Text",
-             "json_config": {
-                 "help_text": "The FAQ title text"
-             }
-         },
-         {
-           "variable_name": "faq",
-           "type": "Content::Fields::Relationship",
+    "limit": 4,
+    "repeaters": [
+       {
+           "variable_name": "img",
+           "type": "Content::Fields::Image",
            "json_config": {
-               "model": "Faq",
-               "scope": ["by_created"],
-               "selectable": true,
-               "help_text": "Choose an FAQ to show",
-               "name_attribute": "question"
-            }
-         }
+               "help_text": "An image to enhance the FAQ",
+               "styles": {
+                   "large": "1000x700>",
+                   "medium": "500x350>",
+                   "thumb": "200x200!"
+               }
+           }
+       },
+       {
+           "variable_name": "title",
+           "type": "Content::Fields::Text",
+           "json_config": {
+               "help_text": "The FAQ title text"
+           }
+       },
+       {
+         "variable_name": "faq",
+         "type": "Content::Fields::Relationship",
+         "json_config": {
+             "model": "Faq",
+             "scope": ["by_created"],
+             "selectable": true,
+             "help_text": "Choose an FAQ to show",
+             "name_attribute": "question"
+          }
+       }
      ],
-     "limit": "4",
      "help_text": "The Faqs page"
   }
 
@@ -61,7 +61,8 @@ module Content
       has_many :repeater_groups, -> { order(position: :asc) }, dependent: :destroy
       accepts_nested_attributes_for :repeater_groups, allow_destroy: true
 
-      delegate :each, :each_with_index, :any?, :count, :size, :length, to: :repeater_groups
+      delegate :each, :each_with_index, :map, :count, :any?, :size, :length, :limit, :first, :offset,
+        to: :repeater_groups
 
       # This method is run when a new repeater group is added to a page as the json_config
       # is updated for the new elements

@@ -41,13 +41,15 @@ module Content
       meta_title.present? ? meta_title : name
     end
 
-    def url
-      "/#{slug}"
-    end
+    def url(host = nil)
+      url = []
+      url << host if host
+      url << "/#{slug}"
 
     def url_for(site)
       return "/#{site.locale}" if homepage?
       "/#{site.locale}/#{slug.gsub(/^\//, "")}"
+      url.join("")
     end
 
     def available_for_site?(site)

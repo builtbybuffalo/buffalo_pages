@@ -17,6 +17,8 @@ module BuffaloPages
     require "models/content/fields/relationship"
     require "models/content/fields/select"
     require "models/content/fields/separator"
+    require "models/content/fields/file"
+    require "models/content/fields/video"
 
     config.content_field_types = []
     config.content_field_types << Content::Fields::Text
@@ -29,6 +31,8 @@ module BuffaloPages
     config.content_field_types << Content::Fields::Relationship
     config.content_field_types << Content::Fields::Select
     config.content_field_types << Content::Fields::Separator
+    config.content_field_types << Content::Fields::File
+    config.content_field_types << Content::Fields::Video
 
     config.paperclip_defaults = {
       styles: {

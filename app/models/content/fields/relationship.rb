@@ -78,13 +78,12 @@ module Content
       SELECTABLE_OPTIONS = {
         order: :id,
         sort: :asc,
-        scopes: [],
-        where: "",
+        scopes: []
       }.with_indifferent_access.freeze
 
       has_one :field, as: :thingable
 
-      delegate :each, :each_with_index, :any?, :to_s, to: :relation
+      delegate :each, :each_with_index, :total_pages, :per, :to_s, to: :relation
 
       def self.selectable_collection_from_config(config)
         raise "A model is required within the config" unless config[:model].present?
@@ -99,10 +98,13 @@ module Content
           relationship = relationship.send(scope)
         end
 
-        relationship = relationship.order("#{options[:order]}": options[:sort])
-        relationship = relationship.where(options[:where]) if options[:where].present?
+        relationship.order("#{options[:order]}": options[:sort])
+      end
 
-        relationship
+      def page(num = 1)
+        return unless relation.respond_to?(:page)
+
+        relation.page(num)
       end
 
       def method_missing(method_name, *args)
@@ -115,17 +117,17 @@ module Content
         super
       end
 
-      protected
-
       def relation
         return thingable if thingable.present?
 
-        build_relationship
+        @build_relationship ||= build_relationship
       end
+
+      protected
 
       # rubocop:disable Metrics/AbcSize
       def build_relationship
-        relationship = thingable_type.constantize
+        relationship = (thingable_type || config.dig(:model)).constantize
 
         relationship = if config[:limit].present?
                          relationship.limit(config[:limit])

@@ -6,7 +6,7 @@
 			<%= f.label f.object.variable_name %>
 
 			<% include_blank = config[:include_blank].present? ? { include_blank: config[:include_blank] } : {} %>
-			<%= f.select :value, config[:options].invert, include_blank, class: "form-control" %>
+			<%= f.select :value, config[:options].first.is_a?(Array) ? config[:options].invert : config[:options], include_blank, class: "form-control" %>
 
 			<%= f.errors_for :value %>
 			<%= f.help_text f.object.config[:help_text].to_s.html_safe %>

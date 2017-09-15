@@ -7,7 +7,7 @@ module Content
     has_many :fields, as: :repeatable, class_name: "Content::Field", dependent: :destroy
     accepts_nested_attributes_for :fields, allow_destroy: true
 
-    delegate :each, :each_with_index, to: :fields
+    delegate :each, :each_with_index, :map, :any?, :first, :limit, :offset, to: :fields
 
     def method_missing(method_name, *args)
       field = field_from_method_name(method_name)

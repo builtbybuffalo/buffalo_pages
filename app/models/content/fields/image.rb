@@ -54,6 +54,8 @@ module Content
       end
 
       def to_s
+        return unless image.present?
+
         image.asset
       end
 
