@@ -1,6 +1,6 @@
 namespace :buffalo_pages do
   task install: :environment do
-    migrations = Dir["#{BuffaloPages.root}/db/migrate/*"]
+    migrations = Dir["#{BuffaloPages.root}/db/migrate/*"].sort
     target_dir = "#{Rails.root}/db/migrate"
 
     start = DateTime.current
