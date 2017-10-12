@@ -37,4 +37,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "acts_as_list"
   spec.add_runtime_dependency "city-state"
   spec.add_runtime_dependency "delayed_paperclip"
+  spec.add_runtime_dependency "activerecord-import", "~> 0.20.2"
 end
