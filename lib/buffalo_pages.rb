@@ -5,6 +5,7 @@ require "acts_as_list"
 require "city-state"
 require "paperclip"
 require "delayed_paperclip"
+require "activerecord-import"
 
 module BuffaloPages
   if defined?(Rails)
