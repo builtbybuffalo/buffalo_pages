@@ -8,7 +8,7 @@ class ContentPageRouter
       # right route, it picks the first page it comes to.
       match "/:slug", to: "pages#show", via: :PAGE
 
-      pages = Content::Page.published
+      pages = Content::Page.includes(:sites).published
       pages.each do |page|
         if page.sites.any?
           page.sites.each do |site|
@@ -18,7 +18,7 @@ class ContentPageRouter
             begin
               get slug, to: "pages#show", defaults: defaults, as: "page_#{slug.parameterize.underscore}"
               post slug, to: "pages#post", defaults: defaults, as: "post_#{slug.parameterize.underscore}" if page.accepts_post
-            rescue ArgumentError => e
+            rescue ArgumentError
               # duplicate route name
             end
           end
@@ -28,7 +28,6 @@ class ContentPageRouter
 
           get slug, to: "pages#show", defaults: defaults, as: "page_#{slug}"
           post slug, to: "pages#post", defaults: defaults, as: "post_#{slug}" if page.accepts_post
-
         end
       end
 

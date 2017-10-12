@@ -21,5 +21,26 @@ module Content
 
       @config ||= JSON.parse(json_config).with_indifferent_access
     end
+
+    def to_field
+      field_type.constantize.new(fields_for_field.merge(field_blueprint_id: id))
+    end
+
+    def sync_field_settings
+      attrs = %w(position json_config variable_name field_type)
+
+      return unless previous_changes.keys.find { |x| attrs.include?(x) }.present?
+
+      # After the check, this value is no longer required, as on the field its `type`
+      attrs.delete("field_type")
+
+      fields.update_all(attributes.slice(*attrs).merge(type: field_type))
+    end
+
+    protected
+
+    def fields_for_field
+      attributes.except("field_type", "created_at", "updated_at", "id", "page_blueprint_id")
+    end
   end
 end

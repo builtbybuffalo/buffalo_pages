@@ -22,6 +22,16 @@ module Admin
       def build_field_associations
         @object.fields.map(&:build_associations)
       end
+
+      def collection_scope
+        scope = model_class.includes(:fields)
+
+        if model_class.respond_to?(:accessible_by) && defined?(:current_ability) && current_ability.present?
+          scope.accessible_by(current_ability)
+        else
+          scope
+        end
+      end
     end
   end
 end

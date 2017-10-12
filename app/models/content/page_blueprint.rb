@@ -5,27 +5,46 @@ module Content
 
     has_many :pages, dependent: :destroy
 
-    after_save :sync_page_fields
+    after_save :create_new_fields
+    after_update :sync_field_settings
 
     validates :name, :template, presence: true, uniqueness: true
 
     protected
 
-    def sync_page_fields
-      pages.each do |page|
-        existing_fields = page.fields.map do |field|
-          field.from_blueprint
+    def create_new_fields
+      fields = []
 
-          field.field_blueprint_id
-        end
+      blueprints = field_blueprints.to_a
 
-        # Iterate over the field blueprints and create any that are new
-        field_blueprints.each do |field_blueprint|
-          next if existing_fields.include? field_blueprint.id
+      # Find the ids of newly added fields
+      ids = blueprints.map(&:previous_changes).reject(&:blank?).select { |x| x["id"].present? }.map { |x| x["id"].last }
 
-          page.fields << field_blueprint.field_type.constantize.new.from_blueprint(field_blueprint)
-        end
+      # Run through the blueprints, updating only those that were just added
+      blueprints.select { |x| ids.include?(x["id"]) }.each do |blueprint|
+        fields.push(fields_for_pages(blueprint.to_field))
       end
+
+      Field.import fields.flatten, validates: false
+    end
+
+    def sync_field_settings
+      field_blueprints.map(&:sync_field_settings)
+    end
+
+    private
+
+    def fields_for_pages(field)
+      fields = []
+
+      pages.map(&:id).each do |page_id|
+        cloned = field.dup
+        cloned.page_id = page_id
+
+        fields.push(cloned)
+      end
+
+      fields
     end
   end
 end

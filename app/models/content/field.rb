@@ -1,16 +1,11 @@
 module Content
   class Field < ActiveRecord::Base
     TRANSFERABLE_TYPES = ["Content::Fields::Text", "Content::Fields::TextArea", "Content::Fields::CkEditor"].freeze
-    acts_as_list scope: :page
 
     belongs_to :thingable, polymorphic: true
     belongs_to :repeatable, polymorphic: true
     belongs_to :field_blueprint
     belongs_to :page
-
-    validates_associated :field_blueprint, :page
-    validates :variable_name, uniqueness: { scope: "page_id" }, unless: :not_required?
-    validates :variable_name, presence: true, unless: :not_required?
 
     serialize :json_config, JSON
 
