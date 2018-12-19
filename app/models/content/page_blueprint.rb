@@ -9,22 +9,26 @@ module Content
 
     validates :name, :template, presence: true, uniqueness: true
 
+    def sync_fields_for_page(page)
+      existing_fields = page.fields.map do |field|
+        field.from_blueprint
+
+        field.field_blueprint_id
+      end
+
+      # Iterate over the field blueprints and create any that are new
+      field_blueprints.each do |field_blueprint|
+        next if existing_fields.include? field_blueprint.id
+
+        page.fields << field_blueprint.field_type.constantize.new.from_blueprint(field_blueprint)
+      end
+    end
+
     protected
 
     def sync_page_fields
       pages.each do |page|
-        existing_fields = page.fields.map do |field|
-          field.from_blueprint
-
-          field.field_blueprint_id
-        end
-
-        # Iterate over the field blueprints and create any that are new
-        field_blueprints.each do |field_blueprint|
-          next if existing_fields.include? field_blueprint.id
-
-          page.fields << field_blueprint.field_type.constantize.new.from_blueprint(field_blueprint)
-        end
+        sync_fields_for_page(page)
       end
     end
   end

@@ -59,7 +59,7 @@ module Content
     protected
 
     def import_fields_from_blueprint
-      page_blueprint.send :sync_page_fields
+      page_blueprint.sync_fields_for_page(self)
     end
 
     def should_generate_new_friendly_id?
