@@ -19,6 +19,10 @@ module Admin
 
       protected
 
+      def collection_scope
+        super.includes(:page_blueprint, :sites)
+      end
+
       def build_field_associations
         @object.fields.map(&:build_associations)
       end

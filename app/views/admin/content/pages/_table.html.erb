@@ -27,7 +27,7 @@
 					<td><%= record.page_blueprint.name %></td>
 					<td><%= record.published? ? "Published" : "Not published" %></td>
 					<td><%= record.accepts_post ? "Yes" : "No" if record.published? %></td>
-					<td><%= record.site_pages.map(&:site).map(&:name).join(", ") %></td>
+					<td><%= record.sites.map(&:name).join(", ") %></td>
 					<td class="actions">
 						<%= link_to "View", record.url, target: "_blank", class: "btn btn-warning btn-xs" if record.published? %>
 						<%= link_to "Edit", [:edit, :admin, record], class: "btn btn-primary btn-xs" %>
